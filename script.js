@@ -8,6 +8,9 @@ function gva(name){
 function setMsg(text) {
     gid('msg').innerHTML = text;
 }
+guessmounts=[]
+wins=0
+gid('wins').innerHTML = 'Wins: ' + wins
 msgtext="";
 correct=0
 gid("playBtn").addEventListener("click", function(){
@@ -17,12 +20,13 @@ gid("playBtn").addEventListener("click", function(){
         gid('giveUpBtn').disabled = false
         gid('playBtn').disabled = true
         correct = 0
+        guesses = 0
     }
 )
 
 gid('guessBtn').addEventListener('click', function(){
+        guesses += 1
         guess = parseInt(gid('guess').value)
-         
             if (!(isNaN(guess))){
                 if (guess > num){
                     msgtext='too high'
@@ -33,6 +37,17 @@ gid('guessBtn').addEventListener('click', function(){
                     correct = 1
                     gid('guessBtn').disabled = true
                     gid('playBtn').disabled = false
+                    wins+=1
+                    guessmounts.push(guesses)
+                        let sum = 0;
+                        for (let i = 0; i < guessmounts.length; i++) {
+                            sum += guessmounts[i];
+                            console.log(i)
+                        }
+                        console.log(sum)
+                        let av = sum / guessmounts.length;
+                        gid('avgScore').innerHTML=('Average Score: '+av)
+                    gid('wins').innerHTML = 'Wins: ' + wins
                     return
                 }
               
