@@ -34,7 +34,7 @@ gid('guessBtn').addEventListener('click', function(){
                     gid('guessBtn').disabled = true
                     gid('playBtn').disabled = false
                 }
-                if(!correct==1){
+              
                     warmth = Math.abs(guess-num)
                     if (warmth <= 2){
                         msgtext+=', hot!'
@@ -42,7 +42,7 @@ gid('guessBtn').addEventListener('click', function(){
                         msgtext+=', warm!'
                     } else {
                         msgtext+=', cold!'
-                    }
+                    
                 }
             setMsg(msgtext)
         }})
