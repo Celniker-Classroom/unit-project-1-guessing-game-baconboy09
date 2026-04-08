@@ -25,9 +25,9 @@ gid('guessBtn').addEventListener('click', function(){
          
             if (!(isNaN(guess))){
                 if (guess > num){
-                    msgtext='guess lower'
+                    msgtext='too high, guess lower'
                 } else if (guess < num ) {
-                    msgtext='guess higher'
+                    msgtext='too low, guess higher'
                 } else {
                     msgtext='Correct!'
                     correct = 1
