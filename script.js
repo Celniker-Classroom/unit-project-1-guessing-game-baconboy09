@@ -11,7 +11,7 @@ function setMsg(text) {
 msgtext="";
 correct=0
 gid("playBtn").addEventListener("click", function(){
-        num = Math.floor(Math.random()*parseInt(gva('level')))
+        num = Math.floor(Math.random()*parseInt(gva('level')))+1
         setMsg('guess the number!')
         gid('guessBtn').disabled = false
         gid('giveUpBtn').disabled = false
@@ -25,14 +25,15 @@ gid('guessBtn').addEventListener('click', function(){
          
             if (!(isNaN(guess))){
                 if (guess > num){
-                    msgtext='too high, guess lower'
+                    msgtext='too high'
                 } else if (guess < num ) {
-                    msgtext='too low, guess higher'
+                    msgtext='too low'
                 } else {
-                    msgtext='Correct!'
+                    setMsg('correct!')
                     correct = 1
                     gid('guessBtn').disabled = true
                     gid('playBtn').disabled = false
+                    return
                 }
               
                     warmth = Math.abs(guess-num)
