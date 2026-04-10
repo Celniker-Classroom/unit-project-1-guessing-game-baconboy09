@@ -112,7 +112,7 @@ gid('guessBtn').addEventListener('click', function(){
         } else if (guess < num ) {
             msgtext = 'too low';
         } else {
-            setMsg('correct!');
+            setMsg(playerName + ' is correct!');
             gid('guessBtn').disabled = true;
             gid('giveUpBtn').disabled = true;
             gid('playBtn').disabled = false;
