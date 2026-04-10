@@ -8,6 +8,28 @@ function gva(name){
 function setMsg(text) {
     gid('msg').innerHTML = text;
 }
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+function getFormattedDate() {
+  var now = new Date();
+  var month = now.toLocaleString('default', { month: 'long' });
+  var day = now.getDate();
+  var year = now.getFullYear();
+  var seconds = now.getSeconds();
+var suffix = "th";
+  if (day < 11 || day > 13) {
+    var lastDigit = day % 10;
+    if (lastDigit === 1) suffix = "st";
+    else if (lastDigit === 2) suffix = "nd";
+    else if (lastDigit === 3) suffix = "rd";
+  }
+    return month + " " + day + suffix + ", " + year + " " + seconds;
+}
+setInterval(function() {
+  gid('date').innerHTML = getFormattedDate();
+}, 1000);
+prompt("what's your name?")
 guessmounts=[]
 wins=0
 gid('wins').innerHTML = 'Wins: ' + wins
