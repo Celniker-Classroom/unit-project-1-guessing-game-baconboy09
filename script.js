@@ -1,4 +1,3 @@
-
 function gid(id){
     return document.getElementById(id);
 }
@@ -35,14 +34,17 @@ function time() {
 
 setInterval(time, 1000);
 time();
-// sdfsdf
 
 var rawName = prompt("what's your name?");
 var playerName = capitalize(rawName);
 
 var scoreArray = [];
+var timeArray = [];
 var wins = 0;
-var num, guesses;
+var num, guesses, startTime;
+
+gid('fastest').textContent = "0";
+gid('avgTime').textContent = "0";
 
 function updateScore(currentScore) {
     scoreArray.push(currentScore);
@@ -55,7 +57,7 @@ function updateScore(currentScore) {
     let avg = sum / scoreArray.length;
     
     gid('wins').textContent = "Total wins: " + wins;
-    gid('avgScore').textContent = "Average Score: " + avg.toFixed(1);
+    gid('avgScore').textContent = avg.toFixed(1);
 
     let listItems = document.getElementsByName('leaderboard');
     for (let i = 0; i < listItems.length; i++) {
@@ -67,8 +69,30 @@ function updateScore(currentScore) {
     }
 }
 
+function updateTimers() {
+    let endTime = new Date().getTime();
+    let duration = (endTime - startTime) / 1000;
+    timeArray.push(duration);
+
+    let fastest = timeArray[0];
+    let sumTime = 0;
+
+    for (let i = 0; i < timeArray.length; i++) {
+        if (timeArray[i] < fastest) {
+            fastest = timeArray[i];
+        }
+        sumTime += timeArray[i];
+    }
+
+    let avgTime = sumTime / timeArray.length;
+
+    gid('fastest').textContent = fastest.toFixed(1);
+    gid('avgTime').textContent = avgTime.toFixed(1);
+}
+
 gid("playBtn").addEventListener("click", function(){
     num = Math.floor(Math.random() * parseInt(gva('level'))) + 1;
+    startTime = new Date().getTime();
     setMsg(playerName + ", guess the number!");
     gid('guessBtn').disabled = false;
     gid('giveUpBtn').disabled = false;
@@ -93,6 +117,7 @@ gid('guessBtn').addEventListener('click', function(){
             gid('giveUpBtn').disabled = true;
             gid('playBtn').disabled = false;
             updateScore(guesses);
+            updateTimers();
             return;
         }
         
@@ -109,6 +134,7 @@ gid('giveUpBtn').addEventListener('click', function(){
     let penaltyScore = parseInt(gva('level'));
     setMsg('The number was ' + num + '.');
     updateScore(penaltyScore); 
+    updateTimers();
     
     gid('guessBtn').disabled = true;
     gid('giveUpBtn').disabled = true;
