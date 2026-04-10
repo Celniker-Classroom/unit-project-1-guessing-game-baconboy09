@@ -47,6 +47,7 @@ gid('fastest').textContent = "0";
 gid('avgTime').textContent = "0";
 
 function updateScore(currentScore) {
+    wins += 1;
     scoreArray.push(currentScore);
     scoreArray.sort(function(a, b) { return a - b; });
 
@@ -56,7 +57,7 @@ function updateScore(currentScore) {
     }
     let avg = sum / scoreArray.length;
     
-    gid('wins').textContent = "Total wins: " + wins;
+    gid('wins').textContent = wins;
     gid('avgScore').textContent = avg.toFixed(1);
 
     let listItems = document.getElementsByName('leaderboard');
@@ -111,8 +112,7 @@ gid('guessBtn').addEventListener('click', function(){
         } else if (guess < num ) {
             msgtext = 'too low';
         } else {
-            wins += 1;
-            setMsg('correct! ' + playerName + ' won!');
+            setMsg('correct!');
             gid('guessBtn').disabled = true;
             gid('giveUpBtn').disabled = true;
             gid('playBtn').disabled = false;
