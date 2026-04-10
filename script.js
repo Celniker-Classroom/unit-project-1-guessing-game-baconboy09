@@ -35,6 +35,7 @@ function time() {
 
 setInterval(time, 1000);
 time();
+// sdfsdf
 
 var rawName = prompt("what's your name?");
 var playerName = capitalize(rawName);
