@@ -1,92 +1,114 @@
-// add javascript here
+
 function gid(id){
-    return document.getElementById(id)
+    return document.getElementById(id);
 }
+
 function gva(name){
-    return document.querySelector(`input[name="${name}"]:checked`).value;
+    return document.querySelector("input[name='" + name + "']:checked").value;
 }
+
 function setMsg(text) {
     gid('msg').innerHTML = text;
 }
+
 function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
-function getFormattedDate() {
-  var now = new Date();
-  var month = now.toLocaleString('default', { month: 'long' });
-  var day = now.getDate();
-  var year = now.getFullYear();
-  var seconds = now.getSeconds();
-var suffix = "th";
-  if (day < 11 || day > 13) {
-    var lastDigit = day % 10;
-    if (lastDigit === 1) suffix = "st";
-    else if (lastDigit === 2) suffix = "nd";
-    else if (lastDigit === 3) suffix = "rd";
-  }
-    return month + " " + day + suffix + ", " + year + " " + seconds;
-}
-setInterval(function() {
-  gid('date').innerHTML = getFormattedDate();
-}, 1000);
-prompt("what's your name?")
-guessmounts=[]
-wins=0
-gid('wins').innerHTML = 'Wins: ' + wins
-msgtext="";
-correct=0
-gid("playBtn").addEventListener("click", function(){
-        num = Math.floor(Math.random()*parseInt(gva('level')))+1
-        setMsg('guess the number!')
-        gid('guessBtn').disabled = false
-        gid('giveUpBtn').disabled = false
-        gid('playBtn').disabled = true
-        correct = 0
-        guesses = 0
+
+function time() {
+    let now = new Date();
+    const months = ["January", "February", "March", "April", "May", "June", 
+                    "July", "August", "September", "October", "November", "December"];
+    let month = months[now.getMonth()];
+    let day = now.getDate();
+    let year = now.getFullYear();
+    let timeString = now.toLocaleTimeString();
+
+    let suffix = "th";
+    if (day < 11 || day > 13) {
+        if (day % 10 === 1) suffix = "st";
+        else if (day % 10 === 2) suffix = "nd";
+        else if (day % 10 === 3) suffix = "rd";
     }
-)
+    gid('date').textContent = month + " " + day + suffix + ", " + year + " - " + timeString;
+}
+
+setInterval(time, 1000);
+time();
+
+var rawName = prompt("what's your name?");
+var playerName = capitalize(rawName);
+
+var scoreArray = [];
+var wins = 0;
+var num, guesses;
+
+function updateScore(currentScore) {
+    scoreArray.push(currentScore);
+    scoreArray.sort(function(a, b) { return a - b; });
+
+    let sum = 0;
+    for (let i = 0; i < scoreArray.length; i++) {
+        sum += scoreArray[i];
+    }
+    let avg = sum / scoreArray.length;
+    
+    gid('wins').textContent = "Total wins: " + wins;
+    gid('avgScore').textContent = "Average Score: " + avg.toFixed(1);
+
+    let listItems = document.getElementsByName('leaderboard');
+    for (let i = 0; i < listItems.length; i++) {
+        if (scoreArray[i] !== undefined) {
+            listItems[i].textContent = scoreArray[i];
+        } else {
+            listItems[i].textContent = "--";
+        }
+    }
+}
+
+gid("playBtn").addEventListener("click", function(){
+    num = Math.floor(Math.random() * parseInt(gva('level'))) + 1;
+    setMsg(playerName + ", guess the number!");
+    gid('guessBtn').disabled = false;
+    gid('giveUpBtn').disabled = false;
+    gid('playBtn').disabled = true;
+    guesses = 0;
+});
 
 gid('guessBtn').addEventListener('click', function(){
-        guesses += 1
-        guess = parseInt(gid('guess').value)
-            if (!(isNaN(guess))){
-                if (guess > num){
-                    msgtext='too high'
-                } else if (guess < num ) {
-                    msgtext='too low'
-                } else {
-                    setMsg('correct!')
-                    correct = 1
-                    gid('guessBtn').disabled = true
-                    gid('playBtn').disabled = false
-                    wins+=1
-                    guessmounts.push(guesses)
-                        let sum = 0;
-                        for (let i = 0; i < guessmounts.length; i++) {
-                            sum += guessmounts[i];
-                            console.log(i)
-                        }
-                        console.log(sum)
-                        let av = sum / guessmounts.length;
-                        gid('avgScore').innerHTML=('Average Score: '+av)
-                    gid('wins').innerHTML = 'Wins: ' + wins
-                    return
-                }
-              
-                    warmth = Math.abs(guess-num)
-                    if (warmth <= 2){
-                        msgtext+=', hot!'
-                    } else if (warmth <= 5){
-                        msgtext+=', warm!'
-                    } else {
-                        msgtext+=', cold!'
-                    
-                }
-            setMsg(msgtext)
-        }})
+    guesses += 1;
+    let guess = parseInt(gid('guess').value);
+    let msgtext = "";
+
+    if (!(isNaN(guess))){
+        if (guess > num){
+            msgtext = 'too high';
+        } else if (guess < num ) {
+            msgtext = 'too low';
+        } else {
+            wins += 1;
+            setMsg('correct! ' + playerName + ' won!');
+            gid('guessBtn').disabled = true;
+            gid('giveUpBtn').disabled = true;
+            gid('playBtn').disabled = false;
+            updateScore(guesses);
+            return;
+        }
+        
+        let warmth = Math.abs(guess - num);
+        if (warmth <= 2) msgtext += ', hot!';
+        else if (warmth <= 5) msgtext += ', warm!';
+        else msgtext += ', cold!';
+        
+        setMsg(msgtext);
+    }
+});
 
 gid('giveUpBtn').addEventListener('click', function(){
+    let penaltyScore = parseInt(gva('level'));
     setMsg('The number was ' + num + '.');
+    updateScore(penaltyScore); 
+    
     gid('guessBtn').disabled = true;
     gid('giveUpBtn').disabled = true;
     gid('playBtn').disabled = false;
